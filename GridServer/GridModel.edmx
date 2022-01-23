@@ -1,0 +1,347 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="GridServerDataModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Client">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="uniqueidentifier" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="user_login" Type="varchar" MaxLength="80" Nullable="false" />
+          <Property Name="pwd" Type="varchar" MaxLength="512" Nullable="false" />
+          <Property Name="salt" Type="varchar" MaxLength="512" Nullable="false" />
+          <Property Name="email" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="isOnline" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Home">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="uniqueidentifier" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="home_login" Type="varchar" MaxLength="80" Nullable="false" />
+          <Property Name="pwd" Type="varchar" MaxLength="512" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="salt" Type="varchar" MaxLength="512" Nullable="false" />
+          <Property Name="description" Type="varchar" MaxLength="1024" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TaskJournal">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="uniqueidentifier" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="homeId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="date" Type="datetime" Nullable="false" />
+          <Property Name="taskId" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserSubscribes">
+          <Key>
+            <PropertyRef Name="userId" />
+            <PropertyRef Name="homeId" />
+          </Key>
+          <Property Name="userId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="homeId" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserTasks">
+          <Key>
+            <PropertyRef Name="userId" />
+            <PropertyRef Name="taskId" />
+          </Key>
+          <Property Name="userId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="taskId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="dateStart" Type="datetime" Nullable="false" />
+          <Property Name="isDone" Type="bit" Nullable="false" />
+          <Property Name="dateDone" Type="datetime" />
+          <Property Name="resilt" Type="text" />
+        </EntityType>
+        <Association Name="Relationship10">
+          <End Role="Home" Type="Self.Home" Multiplicity="1" />
+          <End Role="TaskJournal" Type="Self.TaskJournal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Home">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="TaskJournal">
+              <PropertyRef Name="homeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Relationship5">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="UserSubscribes" Type="Self.UserSubscribes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="UserSubscribes">
+              <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Relationship6">
+          <End Role="Home" Type="Self.Home" Multiplicity="1" />
+          <End Role="UserSubscribes" Type="Self.UserSubscribes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Home">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="UserSubscribes">
+              <PropertyRef Name="homeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Relationship8">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="UserTasks" Type="Self.UserTasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="UserTasks">
+              <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Relationship9">
+          <End Role="TaskJournal" Type="Self.TaskJournal" Multiplicity="1" />
+          <End Role="UserTasks" Type="Self.UserTasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TaskJournal">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="UserTasks">
+              <PropertyRef Name="taskId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="GridServerDataModelStoreContainer">
+          <EntitySet Name="Client" EntityType="Self.Client" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Home" EntityType="Self.Home" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TaskJournal" EntityType="Self.TaskJournal" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserSubscribes" EntityType="Self.UserSubscribes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserTasks" EntityType="Self.UserTasks" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="Relationship10" Association="Self.Relationship10">
+            <End Role="Home" EntitySet="Home" />
+            <End Role="TaskJournal" EntitySet="TaskJournal" />
+          </AssociationSet>
+          <AssociationSet Name="Relationship5" Association="Self.Relationship5">
+            <End Role="Client" EntitySet="Client" />
+            <End Role="UserSubscribes" EntitySet="UserSubscribes" />
+          </AssociationSet>
+          <AssociationSet Name="Relationship6" Association="Self.Relationship6">
+            <End Role="Home" EntitySet="Home" />
+            <End Role="UserSubscribes" EntitySet="UserSubscribes" />
+          </AssociationSet>
+          <AssociationSet Name="Relationship8" Association="Self.Relationship8">
+            <End Role="Client" EntitySet="Client" />
+            <End Role="UserTasks" EntitySet="UserTasks" />
+          </AssociationSet>
+          <AssociationSet Name="Relationship9" Association="Self.Relationship9">
+            <End Role="TaskJournal" EntitySet="TaskJournal" />
+            <End Role="UserTasks" EntitySet="UserTasks" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="GridServerDataModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Client">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="user_login" Type="String" MaxLength="80" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="pwd" Type="String" MaxLength="512" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="salt" Type="String" MaxLength="512" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="email" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="isOnline" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="UserTasks" Relationship="Self.Relationship8" FromRole="Client" ToRole="UserTasks" />
+          <NavigationProperty Name="Home" Relationship="Self.UserSubscribes" FromRole="Client" ToRole="Home" />
+        </EntityType>
+        <EntityType Name="Home">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="home_login" Type="String" MaxLength="80" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="pwd" Type="String" MaxLength="512" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="salt" Type="String" MaxLength="512" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="description" Type="String" MaxLength="1024" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="TaskJournal" Relationship="Self.Relationship10" FromRole="Home" ToRole="TaskJournal" />
+          <NavigationProperty Name="Client" Relationship="Self.UserSubscribes" FromRole="Home" ToRole="Client" />
+        </EntityType>
+        <EntityType Name="TaskJournal">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Guid" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="homeId" Type="Guid" Nullable="false" />
+          <Property Name="date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="taskId" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="Home" Relationship="Self.Relationship10" FromRole="TaskJournal" ToRole="Home" />
+          <NavigationProperty Name="UserTasks" Relationship="Self.Relationship9" FromRole="TaskJournal" ToRole="UserTasks" />
+        </EntityType>
+        <EntityType Name="UserTasks">
+          <Key>
+            <PropertyRef Name="userId" />
+            <PropertyRef Name="taskId" />
+          </Key>
+          <Property Name="userId" Type="Guid" Nullable="false" />
+          <Property Name="taskId" Type="Guid" Nullable="false" />
+          <Property Name="dateStart" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="isDone" Type="Boolean" Nullable="false" />
+          <Property Name="dateDone" Type="DateTime" Precision="3" />
+          <Property Name="resilt" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Client" Relationship="Self.Relationship8" FromRole="UserTasks" ToRole="Client" />
+          <NavigationProperty Name="TaskJournal" Relationship="Self.Relationship9" FromRole="UserTasks" ToRole="TaskJournal" />
+        </EntityType>
+        <Association Name="Relationship8">
+          <End Role="Client" Type="Self.Client" Multiplicity="1" />
+          <End Role="UserTasks" Type="Self.UserTasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="UserTasks">
+              <PropertyRef Name="userId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Relationship10">
+          <End Role="Home" Type="Self.Home" Multiplicity="1" />
+          <End Role="TaskJournal" Type="Self.TaskJournal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Home">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="TaskJournal">
+              <PropertyRef Name="homeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Relationship9">
+          <End Role="TaskJournal" Type="Self.TaskJournal" Multiplicity="1" />
+          <End Role="UserTasks" Type="Self.UserTasks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TaskJournal">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="UserTasks">
+              <PropertyRef Name="taskId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="UserSubscribes">
+          <End Role="Client" Type="Self.Client" Multiplicity="*" />
+          <End Role="Home" Type="Self.Home" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="GridServerDataEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Client" EntityType="Self.Client" />
+          <EntitySet Name="Home" EntityType="Self.Home" />
+          <EntitySet Name="TaskJournal" EntityType="Self.TaskJournal" />
+          <EntitySet Name="UserTasks" EntityType="Self.UserTasks" />
+          <AssociationSet Name="Relationship8" Association="Self.Relationship8">
+            <End Role="Client" EntitySet="Client" />
+            <End Role="UserTasks" EntitySet="UserTasks" />
+          </AssociationSet>
+          <AssociationSet Name="Relationship10" Association="Self.Relationship10">
+            <End Role="Home" EntitySet="Home" />
+            <End Role="TaskJournal" EntitySet="TaskJournal" />
+          </AssociationSet>
+          <AssociationSet Name="Relationship9" Association="Self.Relationship9">
+            <End Role="TaskJournal" EntitySet="TaskJournal" />
+            <End Role="UserTasks" EntitySet="UserTasks" />
+          </AssociationSet>
+          <AssociationSet Name="UserSubscribes" Association="Self.UserSubscribes">
+            <End Role="Client" EntitySet="Client" />
+            <End Role="Home" EntitySet="Home" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="GridServerDataModelStoreContainer" CdmEntityContainer="GridServerDataEntities">
+          <EntitySetMapping Name="Client">
+            <EntityTypeMapping TypeName="GridServerDataModel.Client">
+              <MappingFragment StoreEntitySet="Client">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="user_login" ColumnName="user_login" />
+                <ScalarProperty Name="pwd" ColumnName="pwd" />
+                <ScalarProperty Name="salt" ColumnName="salt" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="isOnline" ColumnName="isOnline" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Home">
+            <EntityTypeMapping TypeName="GridServerDataModel.Home">
+              <MappingFragment StoreEntitySet="Home">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="home_login" ColumnName="home_login" />
+                <ScalarProperty Name="pwd" ColumnName="pwd" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="salt" ColumnName="salt" />
+                <ScalarProperty Name="description" ColumnName="description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TaskJournal">
+            <EntityTypeMapping TypeName="GridServerDataModel.TaskJournal">
+              <MappingFragment StoreEntitySet="TaskJournal">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="homeId" ColumnName="homeId" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="taskId" ColumnName="taskId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserTasks">
+            <EntityTypeMapping TypeName="GridServerDataModel.UserTasks">
+              <MappingFragment StoreEntitySet="UserTasks">
+                <ScalarProperty Name="userId" ColumnName="userId" />
+                <ScalarProperty Name="taskId" ColumnName="taskId" />
+                <ScalarProperty Name="dateStart" ColumnName="dateStart" />
+                <ScalarProperty Name="isDone" ColumnName="isDone" />
+                <ScalarProperty Name="dateDone" ColumnName="dateDone" />
+                <ScalarProperty Name="resilt" ColumnName="resilt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="UserSubscribes" TypeName="GridServerDataModel.UserSubscribes" StoreEntitySet="UserSubscribes">
+            <EndProperty Name="Client">
+              <ScalarProperty Name="id" ColumnName="userId" />
+            </EndProperty>
+            <EndProperty Name="Home">
+              <ScalarProperty Name="id" ColumnName="homeId" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
